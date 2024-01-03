@@ -1,9 +1,7 @@
 
 
-# admin.py
-
 from django.contrib import admin
-from .models import Gene, Experiment, Sample, AnalysisResult, Exam,Patient,Consultation
+from .models import Gene, Experiment, Sample, AnalysisResult, Exam, Patient,Consultation
 
 admin.site.register(Gene)
 admin.site.register(Experiment)

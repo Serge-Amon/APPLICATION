@@ -21,7 +21,7 @@ from .views import GeneListView, ExamCreateView, ConsultationCreateView,PatientV
 
 # urls.py
 from django.urls import path
-from .views import search_patient, export_results
+from .views import search_patient, export_results, home
 
 
 
@@ -33,5 +33,6 @@ urlpatterns = [
     path('patient/', PatientView.as_view(), name='patient'),
     path('search/', search_patient, name='search_patient'),
     path('export-results/', export_results, name='export_results'),
+    path('', home,  name="accueil")
     # Ajoutez d'autres URL au besoin
 ]

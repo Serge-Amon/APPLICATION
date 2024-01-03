@@ -86,3 +86,8 @@ def export_results(request):
     response.write(csv_content)
 
     return response
+
+
+def home(request):
+    home_page = '/templates/base.html'
+    return render(request, 'base.html')
