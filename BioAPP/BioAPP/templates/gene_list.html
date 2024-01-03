@@ -1,0 +1,14 @@
+<!-- gene_list.html -->
+
+{% extends 'base.html' %}
+
+{% block title %}Gene List{% endblock %}
+
+{% block content %}
+    <h2>Gene List</h2>
+    <ul>
+        {% for gene in genes %}
+            <li>{{ gene.name }} - {{ gene.description }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

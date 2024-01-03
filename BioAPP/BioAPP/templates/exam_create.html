@@ -1,0 +1,14 @@
+<!-- exam_create.html -->
+
+{% extends 'base.html' %}
+
+{% block title %}Create Exam{% endblock %}
+
+{% block content %}
+    <h2>Create Exam</h2>
+    <form method="post" action="{% url 'exam_create' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Create Exam</button>
+    </form>
+{% endblock %}

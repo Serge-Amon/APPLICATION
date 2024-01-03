@@ -1,0 +1,5 @@
+<!-- templates/export_results.csv -->
+"First Name","Last Name"
+{% for patient in results %}
+"{{ patient.first_name }}","{{ patient.last_name }}"
+{% endfor %}

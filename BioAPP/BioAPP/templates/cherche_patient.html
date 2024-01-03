@@ -1,0 +1,17 @@
+<!-- templates/search_patient.html -->
+{% extends 'base_generic.html' %}
+
+{% block content %}
+  <h1>Résultats de la recherche pour "{{ query }}"</h1>
+
+  {% if results %}
+    <ul>
+      {% for patient in results %}
+        <li>{{ patient.first_name }} {{ patient.last_name }}</li>
+      {% endfor %}
+    </ul>
+    <a href="{% url 'export_results' %}?q={{ query }}">Exporter les résultats</a>
+  {% else %}
+    <p>Aucun résultat trouvé.</p>
+  {% endif %}
+{% endblock %}

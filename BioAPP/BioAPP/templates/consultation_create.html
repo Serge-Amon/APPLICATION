@@ -1,0 +1,11 @@
+<!-- templates/consultation_create.html -->
+{% extends 'base_generic.html' %}
+
+{% block content %}
+  <h1>Création d'une consultation</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Enregistrer</button>
+  </form>
+{% endblock %}
