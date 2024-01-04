@@ -1,0 +1,68 @@
+{% extends 'base.html' %} 
+{% load static %}
+
+{% block styles %}
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{% static 'css/style_form.css'%}"
+  onload="this.rel='stylesheet'"
+/>
+
+<noscript
+  ><link
+    rel="stylesheet"
+    type="text/css"
+    href="{% static 'css/style_form.css'%}"
+/></noscript>
+
+<style>
+    body {
+        overflow: hidden; /* Désactiver le scrolling */
+    }
+</style>
+
+<style>
+    /* Ajoutez ici vos styles personnalisés */
+    .fixed-element {
+        top: 30% !important;
+        left: 0% !important;
+        right: 20% !important;
+        position: relative !important;
+        z-index: 999;
+        background-color: rgba(255, 255, 255, 0.1) !important /* Fond semi-transparent */
+
+    }
+
+    .icon-box-primary {
+        /* Ajoutez vos styles personnalisés ici pour les icon-box */
+        padding: 20px;
+    }
+
+</style>
+{% endblock styles %}
+
+{% block contents %}
+<div class="container">
+  <div class="form-container">
+    <div class="left-container">
+      <div class="left-inner-container">
+        <h2>Let's Chat</h2>
+        <p>
+          Whether you have a question, want to start a project or simply want to
+          connect.
+        </p>
+        <br />
+        <p>Feel free to send me a message in the contact form</p>
+      </div>
+    </div>
+    <div class="right-container">
+      <div class="right-inner-container">
+        {% block title%}{% endblock title%}
+        {% block container %}{% endblock container %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock contents %}
