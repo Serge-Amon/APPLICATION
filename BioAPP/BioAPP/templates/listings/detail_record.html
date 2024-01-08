@@ -1,0 +1,23 @@
+{% extends 'listings/base.html' %}
+
+{%block title%} Patient information detaillee {% endblock %}
+{% block thead %}
+<tr>
+    <th> Id <span class="icon-arrow"></span></th>
+    <th> Nom <span class="icon-arrow"></span></th>
+    <th> Prenom <span class="icon-arrow"></span></th>
+    <th> Emaill <span class="icon-arrow"></span></th>
+    <th> Adresse <span class="icon-arrow"></span></th>
+</tr>
+{% endblock thead%}
+
+
+{% block tbody %}
+<tr>
+    <td>{{ patient.id }}</td>
+    <td>{{ patient.name }}</td>
+    <td>{{ patient.prenom }}</td>
+    <td>{{ patient.email }}</td>
+    <td>{{ patient.addresse }}</td>
+</tr>
+{% endblock tbody %}

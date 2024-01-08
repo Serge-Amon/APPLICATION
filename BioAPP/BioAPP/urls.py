@@ -16,12 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from django.contrib import admin
-from .views import GeneListView, ExamCreateView, ConsultationCreateView,PatientView
+from .views import GeneListView, ExamCreateView
 
 # urls.py
-from django.urls import path
-from .views import search_patient, export_results, home
+from .views import (search_patient, export_results, home, 
+                    create_patient_and_consultation, list_patients,
+                    error, patient_detail)
 
 
 
@@ -29,10 +29,14 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('genes/', GeneListView.as_view(), name='gene_list'),
     path('exams/create/', ExamCreateView.as_view(), name='exam_create'),
-    path('consultation/create/', ConsultationCreateView.as_view(), name='consultation_create'),
-    path('patient/', PatientView.as_view(), name='patient'),
+    path('consultation/create/', create_patient_and_consultation, name='consultation_create'),
     path('search/', search_patient, name='search_patient'),
     path('export-results/', export_results, name='export_results'),
-    path('', home,  name="accueil")
+    path('patients/', list_patients, name='list_patients'),
+    path('', home,  name='accueil'),
+    path('patients/<int:id>/', patient_detail)
+    
     # Ajoutez d'autres URL au besoin
 ]
+
+handler404 = error

@@ -166,3 +166,21 @@ form p {
 	transition: transform 80ms ease-in;
   cursor:pointer;  
 }
+
+.custom-select {
+	background-color: #eee;
+	border: none;
+	padding: 12px 15px;
+	margin: 8px 0;
+	width: 100%;
+  font-size:0.8rem;
+}
+
+.custom-select > select {
+	background-color: #eee;
+	border: none;
+	padding: 12px 15px;
+	margin: 8px 0;
+	width: 100%;
+  font-size:0.8rem;
+}

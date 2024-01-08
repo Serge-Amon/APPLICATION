@@ -7,36 +7,38 @@
 
 
 
-{% block title%}
+{% block title %}
 <h2> Consultation</h2>
-{% endblock title%}
+{% endblock title %}
 
 {% block container%}
-<form action="#" method="post">
+<form method="post" novalidate action="">
+  {% csrf_token %}
   <div class="row g-3">
     <div class="col-md-6">
-      <label for="inputNom" class="form-label">Nom</label>
-      <input type="text" class="form-control" id="inputNom" />
+      <label for="inputNom" class="form-label"> Nom </label>
+      <input type="text" class="form-control" id="inputNom" required />
     </div>
     <div class="col-md-6">
       <label for="inputPrenom" class="form-label">Prénom</label>
-      <input type="text" class="form-control" id="inputPrenom" />
+      <input type="text" class="form-control" id="inputPrenom" required />
     </div>
   </div>
 
-  <div class="col-12">
+  <div class="col-md-12">
     <label for="inputBod" class="form-label">Date de Naissance</label>
     <input type="date" class="form-control" id="inputBod" />
   </div>
 
   <div class="row g-3">
-    <div class="col-md-6">
+    <div class="col-md-6 custom-select">
       <label for="inputSexe" class="form-label">Sexe</label>
-      <input type="text" class="form-control" id="inputSexe" />
+      <input type="text" class="form-control" placeholder="M pour masculin, F pour Feminin" id="inputSexe" maxlength="1">
     </div>
-    <div class="col-md-6">
-      <label for="inputMat" class="form-label">Situation Matrimoniale</label>
-      <input type="text" class="form-control" id="inputMat" />
+    <div class="col-md-6 custom-select">
+      <label for="matrimoniale" class="form-label">Situation Matrimoniale</label>
+        <input type="text" class="form-control" placeholder="C pour Celibataire, M pour Marie , V pour Veuf" id="matrimoniale" maxlength="1">
+      </select>
     </div>
   </div>
 
@@ -66,7 +68,9 @@
 
   <div class="row g-3">
     <div class="col-md-6">
-      <button type="button" class="btn btn-outline-danger">Annuler</button>
+      <a href="{% url 'accueil' %}">
+      <button type="button" class="btn btn-outline-danger"> Annuler</button>
+      </a>
     </div>
 
     <div class="col-md-6">
