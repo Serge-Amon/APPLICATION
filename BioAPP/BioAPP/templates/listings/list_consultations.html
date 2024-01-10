@@ -55,19 +55,18 @@
       </div>
     </div>
   </div>
+  {% block button %}
   <div class="form-control">
     <div class="row g-3">
-      <div class="col-md-4">
-        <button type="submit" value="Filtrer">Filter</button>
+      <div class="col-md-6">
+        <button type="submit" value="Filtrer" class="btn btn-info">Filter</button>
       </div>
-      <div class="col-md-4">
-        <button type="reset" value="reset">Reset</button>
-      </div>
-      <div class="col-md-4">
-        <button type="submit" value="Export en CSV">CSV</button>
+      <div class="col-md-6">
+        <button type="reset" value="reset" class="btn btn-info">Reset</button>
       </div>
     </div>
   </div>
+  {% endblock button %}
 </form>
 {% endblock content %} {% block thead %}
 <tr>
@@ -88,3 +87,21 @@
   <td>{{ consultation.date }}</td>
 </tr>
 {% endfor %} {% endblock tbody %}
+
+{% block tfooter%}
+<div class="form-control">
+    <div class="row g-3">
+        <div class="col-md-6">
+            <a href="{% url 'export_to_csv' %}?nom={{nom_recherche}}&examen={{examen_recherche}}" download="exported_data.csv">
+                <button type="button" class="btn btn-success"> Export</button>
+            </a>
+        </div>
+        <div class="col-md-6">
+            <a href="{% url 'accueil' %}">
+                <button type="button" class="btn btn-outline-danger"> Home</button>
+              </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock tfooter%}

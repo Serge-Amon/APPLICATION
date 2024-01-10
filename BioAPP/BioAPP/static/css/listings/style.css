@@ -18,6 +18,30 @@
     margin: 0; 
 }*/
 
+a {
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.button-like-link {
+    color: blue; /* couleur du lien */
+    text-decoration: underline; /* soulignement par défaut */
+    cursor: pointer; /* curseur au survol */
+    display: inline-block; /* comportement en ligne comme un bouton */
+    padding: 5px 10px; /* espacement interne */
+    border: 1px solid transparent; /* retrait de la bordure */
+    background-color: transparent; /* couleur de fond transparente */
+    transition: color 0.3s, background-color 0.3s; /* transition en douceur lors du survol */
+}
+
+.button-like-link:hover {
+    color: white; /* changement de couleur au survol */
+    background-color: blue; /* couleur de fond au survol */
+    text-decoration: none; /* enlever le soulignement au survol */
+}
+
+
+
 .row.g-3 {
     display: flex;
     justify-content: space-between;

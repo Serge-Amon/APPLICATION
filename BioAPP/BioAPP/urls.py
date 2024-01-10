@@ -19,10 +19,10 @@ from django.urls import path
 from .views import GeneListView, ExamCreateView
 
 # urls.py
-from .views import (search_patient, export_results, home, 
+from .views import (search_patient, home, 
                     create_patient_and_consultation, list_patients,
                     error, patient_detail, success_patient,
-                    list_consultations, filter_consultations)
+                    list_consultations, export_to_csv)
 
 
 
@@ -37,6 +37,7 @@ urlpatterns = [
     path('', home,  name='accueil'),
     path('patients/<int:id>/', patient_detail),
     path('consultations/', list_consultations, name='consultations'),
+    path('export_to_csv', export_to_csv, name='export_to_csv'),
     
     # Ajoutez d'autres URL au besoin
 ]
