@@ -18,7 +18,20 @@
     margin: 0; 
 }*/
 
-input, textarea {
+.row.g-3 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  
+  .row.g-3 > * {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    column-gap: 10px;
+  }
+
+  input, textarea {
 	background-color: #eee;
 	border: none;
 	padding: 10px 13px;
@@ -26,6 +39,44 @@ input, textarea {
 	width: 80%;
   font-size:0.8rem;
 }
+
+.form-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-group >* {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    column-gap: 10px;
+}
+
+.form-control {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+input:focus, textarea:focus{
+    outline:1px solid #00b4cf;
+  }
+  
+  button {
+      border-radius: 20px;
+      border: 1px solid #00b4cf;
+      background-color: #00b4cf;
+      color: #FFFFFF;
+      font-size: 12px;
+      font-weight: bold;
+      padding: 10px 25px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: transform 80ms ease-in;
+    cursor:pointer;
+  }
 
 body {
     min-height: 100vh;
@@ -60,7 +111,7 @@ main.table {
 .table__header .input-group {
     width: 35%;
     height: 100%;
-    background-color: #fff5;
+    background-color: rgba(246, 12, 12, 0.333);
     padding: 0 .8rem;
     border-radius: 2rem;
 
@@ -74,7 +125,7 @@ main.table {
 .table__header .input-group:hover {
     width: 45%;
     background-color: #fff8;
-    box-shadow: 0 .1rem .4rem #0002;
+    box-shadow: 0 .1rem .4rem rgba(209, 38, 38, 0.23);
 }
 
 .table__header .input-group img {

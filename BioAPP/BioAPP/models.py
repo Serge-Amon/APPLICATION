@@ -61,7 +61,7 @@ class Consultation(models.Model):
     date_consultation = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f"Consultation for {self.patient} - {self.examen} - {self.date_consultation}"
+        return f"Consultation for {self.patient}-{self.examen}-{self.date_consultation}"
 ###############################################################################################
 ####################### classe Experience ################################
 ###############################################################################################
@@ -97,3 +97,6 @@ class AnalysisResult(models.Model):
 
     def __str__(self):
         return f"Resultat pour {self.sample.name}"
+    
+    
+

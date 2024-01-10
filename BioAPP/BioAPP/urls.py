@@ -22,7 +22,7 @@ from .views import GeneListView, ExamCreateView
 from .views import (search_patient, export_results, home, 
                     create_patient_and_consultation, list_patients,
                     error, patient_detail, success_patient,
-                    list_consultations)
+                    list_consultations, filter_consultations)
 
 
 
@@ -32,7 +32,6 @@ urlpatterns = [
     path('exams/create/', ExamCreateView.as_view(), name='exam_create'),
     path('consultation/create/', create_patient_and_consultation, name='consultation_create'),
     path('search/', search_patient, name='search_patient'),
-    path('export-results/', export_results, name='export_results'),
     path('patients/', list_patients, name='list_patients'),
     path('success/patients', success_patient, name='success_patients'),
     path('', home,  name='accueil'),
