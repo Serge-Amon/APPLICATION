@@ -5,15 +5,18 @@
 
 <head>
     {% block head %}
+    {% block meta %}
     <meta charset="utf-8">
     <title>Labsky - Laboratory HTML Website Template</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
+    {% endblock meta %}
 
     <!-- Favicon -->
 
     <!-- Google Web Fonts -->
+    {% block links %}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Red+Rose:wght@600;700&display=swap"
@@ -29,6 +32,7 @@
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    {% endblock links %}
 
     {% block styles %}
 
@@ -83,7 +87,7 @@
 </head>
 
 <body>
-    
+    {% block body %}
     <!-- Spinner Start -->
     <div id="spinner"
         class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
@@ -280,6 +284,8 @@
 
     <!-- Template Javascript -->
     <script src="{% static 'js/main.js' %}"></script>
+{% endblock body %}
+{% block tfooter %} {% endblock tfooter %}
 </body>
 
 </html>

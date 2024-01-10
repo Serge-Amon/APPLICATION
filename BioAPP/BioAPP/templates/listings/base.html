@@ -11,6 +11,7 @@
     {% block styles %} {% endblock styles %}
   </head>
   <body>
+    {%block body %}
     <main class="table" id="customers_table">
       <section class="table__header">
         {% block title%} {% endblock title%}
@@ -30,5 +31,6 @@
         </div>
       </section>
     </main>
+    {% endblock body %}
   </body>
 </html>
