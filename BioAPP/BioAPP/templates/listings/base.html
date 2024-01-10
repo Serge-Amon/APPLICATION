@@ -1,40 +1,34 @@
-
 {% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>PATIENTS</title>
-        <link rel="stylesheet" type="text/css" href="{% static 'css/listings/style.css' %}">
-        <style>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>PATIENTS</title>
 
-        </style>
-
-
-    </head>
-    <body>
-        <main class="table" id="customers_table">
-            <section class="table__header">
-                {% block title%} {% endblock title%}
-            </section>
-            {% block content %} {% endblock content %}
-            <section class="table__body">
-                <table>
-                    <thead>
-                        {% block thead %}
-                        {% endblock thead %}
-                    </thead>
-                    <tbody>
-                        {% block tbody %}
-                        {% endblock tbody %}
-                    </tbody>
-             </table>
-         </section>
-     </main>
- 
- </body>
- 
- </html>
+    {% block styles %} {% endblock styles %}
+  </head>
+  <body>
+    <main class="table" id="customers_table">
+      <section class="table__header">
+        {% block title%} {% endblock title%}
+      </section>
+      {% block content %} {% endblock content %}
+      <section class="table__body">
+        <div style="height: 400px; overflow-y: auto">
+          <table>
+            <thead>
+              {% block thead %} {% endblock thead %}
+            </thead>
+            <tbody>
+              {% block tbody %} {% endblock tbody %}
+            </tbody>
+          </table>
+          {% block tfooter %} {% endblock tfooter%}
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

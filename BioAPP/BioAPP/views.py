@@ -10,6 +10,7 @@ from django.template.loader import render_to_string
 from django.template import loader
 from django.db.models import Q
 import csv
+from django.http import HttpResponse
 
 class GeneListView(View):
     template_name = '/templates/gene_list.html'
@@ -124,21 +125,41 @@ def list_consultations(request):
     template_name = 'list_consultations.html'
     consultations = Consultation.objects.all()
     consultation_s = []
-    
+
+    nom = request.GET.get('nom', '')
+    examen = request.GET.get('examen', '')
+
+    if nom:
+        consultations_nom = consultations.filter(patient__name__icontains=nom)
+        print("Consultations filtrées par nom :", consultations_nom)  # Ajout de cette ligne pour le débogage
+        consultations = consultations_nom
+
+    if examen:
+        consultations_exam = consultations.filter(examen__icontains=examen)
+        print("Consultations filtrées par examen :", consultations_exam)  # Ajout de cette ligne pour le débogage
+        consultations = consultations_exam
+
     for consultation in consultations:
         patient_info = str(consultation.patient).split('|')
         formatted_date = consultation.date_consultation.strftime("%Y-%m-%d %H:%M:%S")
         consultation_s.append({
             'id': consultation.id,
-            'date': formatted_date, 
+            'date': formatted_date,
             'patient_name': patient_info[0],
             'patient_surname': patient_info[1],
             'patient_email': patient_info[2],
             'examen': consultation.examen,
             'medecin_traitant': consultation.medecin_traitant
-            
         })
-    return render(request, f'listings/{template_name}', {'consultation_s':consultation_s})
+
+    context = {
+        'consultations': consultation_s,
+        'nom_recherche': nom,
+        'examen_recherche': examen
+    }
+
+    return render(request, f'listings/{template_name}', context)
+
 
 
 def get_patient_by_id(patient_id):
@@ -148,14 +169,14 @@ def patient_detail(request, id):
     patient = get_patient_by_id(id)
     return render(request, 'listings/detail_record.html', {'patient': patient})
 
-def get_latest_patient():
-    latest_patient = Patient.objects.order_by('-id').first()
-    return latest_patient
+# def get_latest_patient():
+#     latest_patient = Patient.objects.order_by('-id').first()
+#     return latest_patient
 
 
-def get_latest_consultation():
-    latest_consultation = Consultation.objects.order_by('-id').first
-    return latest_consultation
+# def get_latest_consultation():
+#     latest_consultation = Consultation.objects.order_by('-id').first
+#     return latest_consultation
     
 
 
@@ -187,21 +208,34 @@ def diagnostic_create(request):
         form = ConsultationForm(initial=initial_data)
 
 
-def export_csv(request):
-    query = request.GET.get('nom')
-    if query:
-        patients = Patient.objects.filter(nom__icontains=query)
-    else:
-        patients = Patient.objects.all()
-
+def export_to_csv(request):
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="export_patients.csv"'
+    response['Content-Disposition'] = 'attachment; filename="exported_data.csv"'
 
     writer = csv.writer(response)
-    writer.writerow(['ID', 'Nom', 'Prénom', 'Email', 'Adresse'])  # Écrire l'en-tête
+    writer.writerow(['ID', 'Date', 'Nom', 'Prenom', 'Email', 'Examen', 'Medecin Traitant'])
 
-    for patient in patients:
-        writer.writerow([patient.id, patient.nom, patient.prenom, patient.email, patient.adresse])  # Écrire les données
+    consultations = Consultation.objects.all()
+    nom = request.GET.get('nom', '')
+    examen = request.GET.get('examen', '')
+
+    if nom:
+        consultations = consultations.filter(patient__name__icontains=nom)
+    if examen:
+        consultations = consultations.filter(examen__icontains=examen)
+
+    for consultation in consultations:
+        patient_info = str(consultation.patient).split('|')
+        formatted_date = consultation.date_consultation.strftime("%Y-%m-%d %H:%M:%S")
+        writer.writerow([
+            consultation.id,
+            formatted_date,
+            patient_info[0],
+            patient_info[1],
+            patient_info[2],
+            consultation.examen,
+            consultation.medecin_traitant
+        ])
 
     return response
 
@@ -216,3 +250,41 @@ def search_patient(request):
     else:
         patients = Patient.objects.all()
         return render(request, f'{template_name}', {'patients': patients})
+    
+    
+def export_consultations(request):
+    template_name = 'export_consultations.html'
+    return render(request, f'{template_name}')
+
+
+def filter_consultations(request):
+    consultations = Consultation.objects.all()
+    print("Liste des consultations :", consultations)
+    template_name = 'list_consultations.html'
+    nom = request.GET.get('nom')
+    examen = request.GET.get('examen')
+    print('Requete effectuee sur le nom :', nom)
+    print("Requete effectue sur l'examen :", examen)
+    
+    
+    if nom:
+        consultations = consultations.filter(patient__icontains=f'{nom}')
+    if examen:
+        consultations = consultations.filter(examen__icontains=examen)
+    
+    return render(request, f'listings/{template_name}', {'consultations': consultations})
+
+# def list_consultations(request):
+#     template_name = 'list_consultations.html'
+#     consultations = Consultation.objects.all()
+
+#     nom = request.GET.get('nom')
+#     examen = request.GET.get('examen')
+
+#     if nom:
+#         consultations = consultations.filter(patient_name__icontains=nom)
+
+#     if examen:
+#         consultations = consultations.filter(examen__icontains=examen)
+
+#     return render(request, f'listings/{template_name}', {'consultation_s': consultations})

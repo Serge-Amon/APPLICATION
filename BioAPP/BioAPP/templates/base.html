@@ -4,6 +4,7 @@
 <html lang="en">
 
 <head>
+    {% block head %}
     <meta charset="utf-8">
     <title>Labsky - Laboratory HTML Website Template</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -78,7 +79,7 @@
     {% endblock styles %}
 
     {% block scripts%} {% endblock scripts%}
-    
+    {% endblock head %}
 </head>
 
 <body>

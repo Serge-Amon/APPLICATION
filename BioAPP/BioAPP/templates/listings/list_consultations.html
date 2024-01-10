@@ -1,28 +1,107 @@
-{% extends 'listings/base.html'%}
+{% extends 'listings/base.html'%} {% load static %} {% block styles %}
 
-{% block title%} <h2>LISTE DES CONSULTATIONS</h2> {% endblock title %}
-{% block thead %}
-<tr>
-    <th>Id<span class="icon-arrow"></span></th>
-    <th>Nom<span class="icon-arrow"></span></th>
-    <th>Prenom<span class="icon-arrow"></span></th>
-    <th>Email<span class="icon-arrow"></span></th>
-    <th> Examen<span class="icon-arrow"></span></th>
-    <th> Medecin<span class="icon-arrow"></span></th>
-    <th> Date<span class="icon-arrow"></span></th>
-</tr>
-{% endblock thead %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-{% block tbody %}
-{% for consultation in consultation_s %}
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{% static 'css/listings/style.css' %}"
+  onload="this.rel='stylesheet'"
+/>
+
+<noscript
+  ><link
+    rel="stylesheet"
+    type="text/css"
+    href="{% static 'css/listings/style.css' %}"
+/></noscript>
+
+{% endblock styles%} {% block title%}
+<h2>LISTE DES CONSULTATIONS</h2>
+{% endblock title %} {% comment %} {% block content %}
+
+<form method="get">
+  <div class="row g-3">
+    <div class="col-md-4">
+      <input
+        type="text"
+        name="nom"
+        placeholder="Rechercher par nom"
+        value="{{query}}"
+      />
+    </div>
+    <div class="col-md-4">
+      <input
+        type="text"
+        name="examen"
+        placeholder="Rechercher par examen"
+        value="{{query2}}"
+      />
+    </div>
+  </div>
+  <button type="submit">Recherche</button>
+</form>
+
+{% endblock content %} {% endcomment %} {% block content %}
+
+<form method="GET" action="">
+  <div class="form-group">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <input type="text" id="nom" name="nom" placeholder="Recherche par nom" value="{{nom_recherche}}" />
+      </div>
+      <div class="col-md-6">
+        <input type="text" id="examen" name="examen" placeholder="Recherche par examen" value="{{examen_recherche}}" />
+      </div>
+    </div>
+  </div>
+  {% block button %}
+  <div class="form-control">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <button type="submit" value="Filtrer" class="btn btn-info">Filter</button>
+      </div>
+      <div class="col-md-6">
+        <button type="reset" value="reset" class="btn btn-info">Reset</button>
+      </div>
+    </div>
+  </div>
+  {% endblock button %}
+</form>
+{% endblock content %} {% block thead %}
 <tr>
-    <td> {{consultation.id}} </td>
-    <td> {{consultation.patient_name | upper }} </td>
-    <td>{{ consultation.patient_surname | upper }}</td>
-    <td>{{ consultation.patient_email }}</td>
-    <td>{{ consultation.examen }}</td>
-    <td>{{ consultation.medecin_traitant | upper }}</td>
-    <td>{{ consultation.date }}</td>
+  <th>Nom<span class="icon-arrow"></span></th>
+  <th>Prenom<span class="icon-arrow"></span></th>
+  <th>Email<span class="icon-arrow"></span></th>
+  <th>Examen<span class="icon-arrow"></span></th>
+  <th>Medecin<span class="icon-arrow"></span></th>
+  <th>Date<span class="icon-arrow"></span></th>
 </tr>
-{% endfor %}
-{% endblock tbody %}
+{% endblock thead %} {% block tbody %} {% for consultation in consultations %}
+<tr>
+  <td>{{consultation.patient_name | upper }}</td>
+  <td>{{ consultation.patient_surname | upper }}</td>
+  <td>{{ consultation.patient_email }}</td>
+  <td>{{ consultation.examen }}</td>
+  <td>{{ consultation.medecin_traitant | upper }}</td>
+  <td>{{ consultation.date }}</td>
+</tr>
+{% endfor %} {% endblock tbody %}
+
+{% block tfooter%}
+<div class="form-control">
+    <div class="row g-3">
+        <div class="col-md-6">
+            <a href="{% url 'export_to_csv' %}?nom={{nom_recherche}}&examen={{examen_recherche}}" download="exported_data.csv">
+                <button type="button" class="btn btn-success"> Export</button>
+            </a>
+        </div>
+        <div class="col-md-6">
+            <a href="{% url 'accueil' %}">
+                <button type="button" class="btn btn-outline-danger"> Home</button>
+              </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock tfooter%}
