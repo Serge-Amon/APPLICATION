@@ -1,7 +1,62 @@
 {% extends 'base.html' %} 
 {% load static %}
 
+
 {% block styles %}
+
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{% static 'css/style_form.css'%}"
+  onload="this.rel='stylesheet'"
+/>
+
+<noscript
+  ><link
+    rel="stylesheet"
+    type="text/css"
+    href="{% static 'css/style_form.css'%}"
+/></noscript>
+
+
+<style>
+    /* Ajoutez ici vos styles personnalisés */
+    body {
+        overflow: hidden; /* Désactiver le scrolling */
+        height: 100vh;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .fixed-element {
+        top: 1%;
+        left: 20%;
+        right: 20%;
+        bottom: 40%;
+        position: fixed;
+        z-index: 999;
+    }
+
+    .fixed-element > * {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    h5.mb-3 {
+        font-size: 0.5em;
+    }
+</style>
+{% endblock styles %}
+
+{% block scripts%} {% endblock scripts%}
+
+</head>
+
+
+
+{% comment %} {% block styles %}
 <link
   rel="stylesheet"
   type="text/css"
@@ -40,7 +95,7 @@
     }
 
 </style>
-{% endblock styles %}
+{% endblock styles %} {% endcomment %}
 
 {% block contents %}
 <div class="container">

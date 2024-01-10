@@ -18,6 +18,15 @@
     margin: 0; 
 }*/
 
+input, textarea {
+	background-color: #eee;
+	border: none;
+	padding: 10px 13px;
+	margin: 8px 0;
+	width: 80%;
+  font-size:0.8rem;
+}
+
 body {
     min-height: 100vh;
     display: flex;

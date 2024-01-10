@@ -6,7 +6,6 @@
 }
 
 
-
 body {
 	background: linear-gradient(90deg, #BE8CEF 0%, rgba(61, 46, 232, 0.83) 100%);
 	display: flex;
@@ -39,14 +38,14 @@ h2 {
 
 .left-container {
   flex:1;
-  height:570px;
+  height:580px;
   background-color:#00b4cf;
 }
 
 .right-container {
   display:flex;
   flex:2;
-  height:570px;
+  height:580px;
   background-color: #ffffff;
   justify-content: center;
 }
@@ -54,7 +53,7 @@ h2 {
 .left-container {
   display:flex;
   flex:1;
-  height:570px;
+  height:580px;
   justify-content:center;
   align-items:center;
     color:#ffffff;
@@ -81,9 +80,9 @@ h2 {
 input, textarea {
 	background-color: #eee;
 	border: none;
-	padding: 12px 15px;
+	padding: 10px 13px;
 	margin: 8px 0;
-	width: 100%;
+	width: 80%;
   font-size:0.8rem;
 }
 
@@ -98,7 +97,7 @@ button {
 	color: #FFFFFF;
 	font-size: 12px;
 	font-weight: bold;
-	padding: 12px 45px;
+	padding: 10px 25px;
 	letter-spacing: 1px;
 	text-transform: uppercase;
 	transition: transform 80ms ease-in;
@@ -121,6 +120,12 @@ button:hover {
   .sm-view {
     display:none;  
   }
+}
+
+.separator {
+  border-top: 1px solid #ccc; /* Ajoute une bordure au-dessus de la ligne de séparation */
+  margin-top: 20px; /* Espacement entre les fieldsets */
+  margin-bottom: 20px; /* Espacement entre les fieldsets */
 }
 
 form p {
@@ -165,22 +170,4 @@ form p {
 	text-transform: uppercase;
 	transition: transform 80ms ease-in;
   cursor:pointer;  
-}
-
-.custom-select {
-	background-color: #eee;
-	border: none;
-	padding: 12px 15px;
-	margin: 8px 0;
-	width: 100%;
-  font-size:0.8rem;
-}
-
-.custom-select > select {
-	background-color: #eee;
-	border: none;
-	padding: 12px 15px;
-	margin: 8px 0;
-	width: 100%;
-  font-size:0.8rem;
 }

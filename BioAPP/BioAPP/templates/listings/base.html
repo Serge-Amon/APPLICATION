@@ -1,4 +1,6 @@
+
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -7,12 +9,18 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>PATIENTS</title>
         <link rel="stylesheet" type="text/css" href="{% static 'css/listings/style.css' %}">
+        <style>
+
+        </style>
+
+
     </head>
     <body>
         <main class="table" id="customers_table">
             <section class="table__header">
                 {% block title%} {% endblock title%}
             </section>
+            {% block content %} {% endblock content %}
             <section class="table__body">
                 <table>
                     <thead>

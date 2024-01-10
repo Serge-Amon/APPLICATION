@@ -21,7 +21,8 @@ from .views import GeneListView, ExamCreateView
 # urls.py
 from .views import (search_patient, export_results, home, 
                     create_patient_and_consultation, list_patients,
-                    error, patient_detail)
+                    error, patient_detail, success_patient,
+                    list_consultations)
 
 
 
@@ -33,8 +34,10 @@ urlpatterns = [
     path('search/', search_patient, name='search_patient'),
     path('export-results/', export_results, name='export_results'),
     path('patients/', list_patients, name='list_patients'),
+    path('success/patients', success_patient, name='success_patients'),
     path('', home,  name='accueil'),
-    path('patients/<int:id>/', patient_detail)
+    path('patients/<int:id>/', patient_detail),
+    path('consultations/', list_consultations, name='consultations'),
     
     # Ajoutez d'autres URL au besoin
 ]

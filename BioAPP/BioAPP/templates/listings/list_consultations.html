@@ -1,0 +1,28 @@
+{% extends 'listings/base.html'%}
+
+{% block title%} <h2>LISTE DES CONSULTATIONS</h2> {% endblock title %}
+{% block thead %}
+<tr>
+    <th>Id<span class="icon-arrow"></span></th>
+    <th>Nom<span class="icon-arrow"></span></th>
+    <th>Prenom<span class="icon-arrow"></span></th>
+    <th>Email<span class="icon-arrow"></span></th>
+    <th> Examen<span class="icon-arrow"></span></th>
+    <th> Medecin<span class="icon-arrow"></span></th>
+    <th> Date<span class="icon-arrow"></span></th>
+</tr>
+{% endblock thead %}
+
+{% block tbody %}
+{% for consultation in consultation_s %}
+<tr>
+    <td> {{consultation.id}} </td>
+    <td> {{consultation.patient_name | upper }} </td>
+    <td>{{ consultation.patient_surname | upper }}</td>
+    <td>{{ consultation.patient_email }}</td>
+    <td>{{ consultation.examen }}</td>
+    <td>{{ consultation.medecin_traitant | upper }}</td>
+    <td>{{ consultation.date }}</td>
+</tr>
+{% endfor %}
+{% endblock tbody %}

@@ -1,12 +1,10 @@
-/********** Template CSS **********/
-
 .fw-medium {
     font-weight: 500;
 }
 
 
 /*** Spinner ***/
-#spinner {
+/* #spinner {
     opacity: 0;
     visibility: hidden;
     transition: opacity .5s ease-out, visibility 0s linear .5s;
@@ -17,8 +15,12 @@
     transition: opacity .5s ease-out, visibility 0s linear 0s;
     visibility: visible;
     opacity: 1;
-}
+} */
 
+
+.feature-item {
+
+}
 
 /*** Button ***/
 .btn {
@@ -62,7 +64,8 @@
     font-weight: normal;
 }
 
-.icon-box-primary,
+
+/* .icon-box-primary,
 .icon-box-light {
     position: relative;
     padding: 0 0 10px 10px;
@@ -86,16 +89,15 @@
     border-radius: 35px;
     transition: .5s;
     z-index: -1;
-}
+} */
 
-.icon-box-primary::before {
+/* .icon-box-primary::before {
     background: var(--bs-primary);
-}
-
+} */
+/* 
 .icon-box-light::before {
     background: var(--bs-light);
-}
-
+} */
 
 /*** Navbar ***/
 .sticky-top {
@@ -214,10 +216,6 @@
     }
 }
 
-.page-header {
-    background: linear-gradient(rgba(3, 27, 78, .3), rgba(3, 27, 78, .3)), url(../img/testimonial.jpg) center center no-repeat;
-    background-size: cover;
-}
 
 .page-header .breadcrumb-item+.breadcrumb-item::before {
     color: var(--bs-white);
@@ -235,13 +233,20 @@
     background-size: cover;
 }
 
-.row, .g-4, .feature-row {
+/* .row, .g-4, .feature-row {
     background-color: rgba(255, 255, 255, .8);
+} */
+
+.col-md-6.col-lg-3.wow.fadeIn {
+
 }
 
-.feature-item {
-    border-color: rgba(0, 0, 0, .03) !important;
-    background-color: #FFFFFF;
+.feature-item.h-100.pb-5 {
+    background-color: #be1e1e;
+    color: red; 
+    align-items: left;
+    justify-content: left;
+    width: 40%;
 }
 
 .experience .progress {

@@ -5,11 +5,11 @@ from django.views.generic import CreateView
 from django.views import View
 from .models import Gene, Patient, Consultation  # Assurez-vous que Gene et Exam sont correctement importés
 from .forms import  ExamForm,ConsultationForm,PatientForm
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template.loader import render_to_string
 from django.template import loader
 from django.db.models import Q
-
+import csv
 
 class GeneListView(View):
     template_name = '/templates/gene_list.html'
@@ -34,39 +34,63 @@ class ExamCreateView(View):
         return render(request, self.template_name, {'form': form})
 
 def create_patient_and_consultation(request):
-    endpoint = 'patients'
-    template_name = "consultation_create.html"
-    if request.method == 'POST':
+    template_name= 'consultation_create.html'
+    if request.method == 'POST':      
         patient_form = PatientForm(request.POST)
+        
         consultation_form = ConsultationForm(request.POST)
+        #print('Response de la requete patient :' ,patient_form.is_valid())
+        
+        # if patient_form.is_valid():
+        #     print(consultation_form)
+            
+            # nom = patient_form.cleaned_data.get('nom')
+            # prenom = patient_form.cleaned_data.get('prenom')
+            # email = patient_form.cleaned_data.get('email')
+            
+            # donnees_formulaires = {
+            #     'nom': nom,
+            #     'prenom': prenom,
+            #     'email': email,
+            # }
+            # print(donnees_formulaires)
+        
+        print('Response de la requete patient :' ,patient_form.is_valid())
+        print('Response de la requete patient :' ,consultation_form.is_valid())
+        
         if patient_form.is_valid() and consultation_form.is_valid():
-            patient= patient_form.save()
-            consultation = consultation_form.save(commit=False)
-            consultation.patient = patient
-            consultation.save()
-            return redirect(f'{endpoint}')
+            patient = patient_form.save()
+            consultation_instance = consultation_form.save(commit=False)
+            consultation_instance.patient = patient
+            print('Consultation a ete enregistree : ', consultation_instance)
+            
+            consultation_instance.save()
+
+            return redirect('consultations')
     else:
         patient_form = PatientForm()
         consultation_form = ConsultationForm()
-    
-    return render(request, f'{template_name}', {'patient_form': patient_form, 'consultation_form': consultation_form})
+    context = {'patient_form': patient_form, 'consultation_form': consultation_form}
+    return render(request, f'{template_name}', context)
 # views.py
 
-def search_patient(request):
-    query = request.GET.get('q')
+# def search_patient(request):
+#     query = request.GET.get('q')
 
-    if query:
-        results = Patient.objects.filter(
-            Q(first_name__icontains=query) | Q(last_name__icontains=query)
-        )
-    else:
-        results = Patient.objects.all()
+#     if query:
+#         results = Patient.objects.filter(
+#             Q(first_name__icontains=query) | Q(last_name__icontains=query)
+#         )
+#     else:
+#         results = Patient.objects.all()
 
-    return render(request, 'search_patient.html', {'results': results, 'query': query})
+#     return render(request, 'search_patient.html', {'results': results, 'query': query})
 
 
 # views.py
-
+def success_patient(request):
+    template_name = 'success_patients.html'
+    return render(request, f'{template_name}', {'patient_id': request.POST})
 
 def export_results(request):
     query = request.GET.get('q')
@@ -94,6 +118,27 @@ def list_patients(request):
     template_name ='liste_patients.html'
     patients = Patient.objects.all()
     return render(request,f'listings/{template_name}', {'patients':patients})
+
+
+def list_consultations(request):
+    template_name = 'list_consultations.html'
+    consultations = Consultation.objects.all()
+    consultation_s = []
+    
+    for consultation in consultations:
+        patient_info = str(consultation.patient).split('|')
+        formatted_date = consultation.date_consultation.strftime("%Y-%m-%d %H:%M:%S")
+        consultation_s.append({
+            'id': consultation.id,
+            'date': formatted_date, 
+            'patient_name': patient_info[0],
+            'patient_surname': patient_info[1],
+            'patient_email': patient_info[2],
+            'examen': consultation.examen,
+            'medecin_traitant': consultation.medecin_traitant
+            
+        })
+    return render(request, f'listings/{template_name}', {'consultation_s':consultation_s})
 
 
 def get_patient_by_id(patient_id):
@@ -140,3 +185,34 @@ def diagnostic_create(request):
             'inputExam': '',  # Ajoutez le champ d'examen demandé ici si nécessaire
         }
         form = ConsultationForm(initial=initial_data)
+
+
+def export_csv(request):
+    query = request.GET.get('nom')
+    if query:
+        patients = Patient.objects.filter(nom__icontains=query)
+    else:
+        patients = Patient.objects.all()
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="export_patients.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['ID', 'Nom', 'Prénom', 'Email', 'Adresse'])  # Écrire l'en-tête
+
+    for patient in patients:
+        writer.writerow([patient.id, patient.nom, patient.prenom, patient.email, patient.adresse])  # Écrire les données
+
+    return response
+
+
+
+def search_patient(request):
+    query = request.GET.get('nom')  # Récupérer le paramètre 'nom' de l'URL
+    template_name = 'list_patients.html'
+    if query:
+        patients = Patient.objects.filter(nom__icontains=query)  # Recherche insensible à la casse
+        return render(request, f'{template_name}', {'patients': patients, 'query': query})
+    else:
+        patients = Patient.objects.all()
+        return render(request, f'{template_name}', {'patients': patients})

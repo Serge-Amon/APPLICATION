@@ -1,6 +1,7 @@
 # models.py
 
 from django.db import models
+from django.utils import timezone
 ###############################################################################################
 ####################### classe patient ################################
 ###############################################################################################
@@ -14,17 +15,18 @@ class Patient(models.Model):
         ('M', 'Marié(e)'),
         ('V', 'Veuf(ve)')
     )
-    name = models.CharField(max_length = 255)
-    prenom = models.CharField(max_length = 255)
-    sexe = models.CharField(max_length = 1, choices = CHOIX_SEXE)
-    Situation_Matrimoniale = models.CharField(max_length = 1, choices = CHOIX_SITUATION)
-    phone = models.CharField(max_length = 255)
-    addresse = models.CharField(max_length= 255)
+    name = models.CharField(max_length=255)
+    prenom = models.CharField(max_length=255)
+    sexe = models.CharField(max_length=1, choices=CHOIX_SEXE)
+    Situation_Matrimoniale = models.CharField(max_length=1, choices=CHOIX_SITUATION)
+    phone = models.CharField(max_length=255, null=True, blank=True)
+    addresse = models.CharField(max_length=255, null=True, blank=True)
     date_naissance = models.DateField()
-    email = models.CharField(max_length = 255)
+    email = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.name
+        return f"{self.name}|{self.prenom}|{self.email}"
+
 
 ###############################################################################################
 ####################### classe Gene ################################
@@ -53,10 +55,10 @@ class Exam(models.Model):
 ####################### classe Consultation ################################
 ###############################################################################################
 class Consultation(models.Model):
-    patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
-    examen = models.ForeignKey(Exam, on_delete = models.CASCADE)
-    medecin_traitant = models.CharField(max_length = 255)
-    date_consultation = models.DateField()
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    examen = models.ForeignKey(Exam, on_delete=models.CASCADE)
+    medecin_traitant = models.CharField(max_length=255)
+    date_consultation = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"Consultation for {self.patient} - {self.examen} - {self.date_consultation}"
