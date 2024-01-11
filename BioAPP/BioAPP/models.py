@@ -59,6 +59,7 @@ class Consultation(models.Model):
     examen = models.ForeignKey(Exam, on_delete=models.CASCADE)
     medecin_traitant = models.CharField(max_length=255)
     date_consultation = models.DateTimeField(default=timezone.now)
+    resultat = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
         return f"Consultation for {self.patient}-{self.examen}-{self.date_consultation}"

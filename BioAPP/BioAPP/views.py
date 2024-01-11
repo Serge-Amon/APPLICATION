@@ -118,10 +118,35 @@ def home(request):
 def list_patients(request):
     template_name ='liste_patients.html'
     patients = Patient.objects.all()
-    return render(request,f'listings/{template_name}', {'patients':patients})
+    nom = request.GET.get('nom', '')
+    email = request.GET.get('email', '')
+    patient_s = []
+    if nom:
+        patients_nom = patients.filter(name__icontains=nom)
+        patients = patients_nom 
+    if email:
+        patients_email = patients.filter(email__icontains=email)
+        patients = patients_email
+    
+    for patient in patients:
+        patient_s.append({
+            'id': patient.id,
+            'nom': patient.name,
+            'prenom': patient.prenom,
+            'email': patient.email,
+            'adresse': patient.addresse,
+            'phone': patient.phone
+        })
+    context = {
+        'patients': patients,
+        'nom_recherche': nom,
+        'email_recherche' : email
+    }
+    return render(request,f'patients/{template_name}', context)
 
 
 def list_consultations(request):
+    '''List all consultations records'''
     template_name = 'list_consultations.html'
     consultations = Consultation.objects.all()
     consultation_s = []
@@ -131,12 +156,10 @@ def list_consultations(request):
 
     if nom:
         consultations_nom = consultations.filter(patient__name__icontains=nom)
-        print("Consultations filtrées par nom :", consultations_nom)  # Ajout de cette ligne pour le débogage
         consultations = consultations_nom
 
     if examen:
-        consultations_exam = consultations.filter(examen__icontains=examen)
-        print("Consultations filtrées par examen :", consultations_exam)  # Ajout de cette ligne pour le débogage
+        consultations_exam = consultations.filter(examen__name__icontains=examen)
         consultations = consultations_exam
 
     for consultation in consultations:
@@ -158,16 +181,11 @@ def list_consultations(request):
         'examen_recherche': examen
     }
 
-    return render(request, f'listings/{template_name}', context)
+    return render(request, f'consultations/{template_name}', context)
 
-
-
-def get_patient_by_id(patient_id):
-    return get_object_or_404(Patient, id=patient_id)
-
-def patient_detail(request, id):
-    patient = get_patient_by_id(id)
-    return render(request, 'listings/detail_record.html', {'patient': patient})
+def patient_detail(request, patient_id):
+    patient = get_object_or_404(Patient, id=patient_id)
+    return render(request, 'consultations/detail_record.html', {'patient': patient})
 
 # def get_latest_patient():
 #     latest_patient = Patient.objects.order_by('-id').first()
@@ -209,6 +227,7 @@ def diagnostic_create(request):
 
 
 def export_to_csv(request):
+    '''Export data to CSV file'''
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="exported_data.csv"'
 
@@ -272,19 +291,22 @@ def filter_consultations(request):
     if examen:
         consultations = consultations.filter(examen__icontains=examen)
     
-    return render(request, f'listings/{template_name}', {'consultations': consultations})
+    return render(request, f'consultations/{template_name}', {'consultations': consultations})
 
-# def list_consultations(request):
-#     template_name = 'list_consultations.html'
-#     consultations = Consultation.objects.all()
-
-#     nom = request.GET.get('nom')
-#     examen = request.GET.get('examen')
-
-#     if nom:
-#         consultations = consultations.filter(patient_name__icontains=nom)
-
-#     if examen:
-#         consultations = consultations.filter(examen__icontains=examen)
-
-#     return render(request, f'listings/{template_name}', {'consultation_s': consultations})
+def modifier_consultation(request, consultation_id):
+    '''Modify consultation record for a given id'''
+    consultation = get_object_or_404(Consultation, id=consultation_id)
+    template_name = 'modifier_consultation.html'
+    consultation_patient = {
+        'id':  '',
+        'name': '',
+        'prenom': '',
+        'telephone': '',
+        'Examen': '',
+        'Resultat': ''
+    }
+    context = {
+        'consultation': consultation,
+        'patient': consultation_patient
+    }
+    return render(request,f'consultations/{template_name}', context )

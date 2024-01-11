@@ -36,11 +36,12 @@ class PatientForm(forms.ModelForm):
 class ConsultationForm(forms.ModelForm):
     class Meta:
         model = Consultation
-        fields = ['examen', 'medecin_traitant']
+        fields = ['examen', 'medecin_traitant', 'resultat']
     
     widgets = {
         'examen' : forms.TextInput(attrs={'class': 'form-control'}),
         'medecin_traitant': forms.TextInput(attrs={'class': 'form-control'}),
+        'resultat': forms.TextInput(attrs={'class': 'required'})
     }
         
 class AnalyseResultatForm(forms.ModelForm):

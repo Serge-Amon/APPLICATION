@@ -1,4 +1,4 @@
-{% extends 'listings/base.html'%} 
+{% extends 'consultations/base.html'%} 
 {% load static %}
 
 
@@ -8,7 +8,7 @@
 <link
   rel="stylesheet"
   type="text/css"
-  href="{% static 'css/listings/style.css' %}"
+  href="{% static 'css/consultations/style.css' %}"
   onload="this.rel='stylesheet'"
 />
 
@@ -16,37 +16,13 @@
   ><link
     rel="stylesheet"
     type="text/css"
-    href="{% static 'css/listings/style.css' %}"
+    href="{% static 'css/consultations/style.css' %}"
 /></noscript>
 
 {% endblock styles%}
 
-{% block title%}<h2>LISTE DES CONSULTATIONS</h2>{% endblock title %} {% comment %} {% block content %}
-
-<form method="get">
-  <div class="row g-3">
-    <div class="col-md-4">
-      <input
-        type="text"
-        name="nom"
-        placeholder="Rechercher par nom"
-        value="{{query}}"
-      />
-    </div>
-    <div class="col-md-4">
-      <input
-        type="text"
-        name="examen"
-        placeholder="Rechercher par examen"
-        value="{{query2}}"
-      />
-    </div>
-  </div>
-  <button type="submit">Recherche</button>
-</form>
-
-{% endblock content %} {% endcomment %} {% block content %}
-
+{% block title%}<h2>LISTE DES CONSULTATIONS</h2>{% endblock title %}
+{% block content %}
 <form method="GET" action="">
   <div class="form-group">
     <div class="row g-3">
@@ -71,23 +47,26 @@
   </div>
   {% endblock button %}
 </form>
-{% endblock content %} {% block thead %}
+{% endblock content %}
+{% block thead %}
 <tr>
   <th>Nom<span class="icon-arrow"></span></th>
   <th>Prenom<span class="icon-arrow"></span></th>
   <th>Email<span class="icon-arrow"></span></th>
   <th>Examen<span class="icon-arrow"></span></th>
   <th>Medecin<span class="icon-arrow"></span></th>
+  <th>Resultat<span class="icon-arrow"></span></th>
   <th>Date<span class="icon-arrow"></span></th>
 </tr>
 {% endblock thead %} {% block tbody %} {% for consultation in consultations %}
 <tr>
   <td>{{consultation.patient_name | upper }}</td>
   <td>{{ consultation.patient_surname | upper }}</td>
-  <td>{{ consultation.patient_email }}</td>
+  <td><a href="{% url 'modifier_consultation' consultation.id %}">{{ consultation.patient_email }} </a></td>
   <td>{{ consultation.examen }}</td>
   <td>{{ consultation.medecin_traitant | upper }}</td>
-  <td>{{ consultation.date }}</td>
+  <td>{{consultation.resultat}}</td>
+  <td>{{ consultation.date}}</td>
 </tr>
 {% endfor %} {% endblock tbody %}
 

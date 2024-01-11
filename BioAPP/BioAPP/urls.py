@@ -22,7 +22,8 @@ from .views import GeneListView, ExamCreateView
 from .views import (search_patient, home, 
                     create_patient_and_consultation, list_patients,
                     error, patient_detail, success_patient,
-                    list_consultations, export_to_csv)
+                    list_consultations, export_to_csv,
+                    modifier_consultation)
 
 
 
@@ -38,7 +39,7 @@ urlpatterns = [
     path('patients/<int:id>/', patient_detail),
     path('consultations/', list_consultations, name='consultations'),
     path('export_to_csv', export_to_csv, name='export_to_csv'),
-    
+    path('consultations/modifier/<int:consultation_id>', modifier_consultation, name="modifier_consultation")
     # Ajoutez d'autres URL au besoin
 ]
 

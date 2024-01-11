@@ -1,0 +1,97 @@
+{% extends 'consultations/base.html'%} 
+{% load static %}
+
+
+{% block styles %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{% static 'css/patients/style.css' %}"
+  onload="this.rel='stylesheet'"
+/>
+
+<noscript
+  ><link
+    rel="stylesheet"
+    type="text/css"
+    href="{% static 'css/patients/style.css' %}"
+/></noscript>
+
+{% endblock styles%}
+
+{% block title%}<h2>LISTE DES PATIENTS</h2>{% endblock title %}
+{% block content %}
+<form method="GET" action="">
+  <div class="form-group">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <input type="text" id="nom" name="nom" placeholder="Recherche par nom" value="{{nom_recherche}}" />
+      </div>
+      <div class="col-md-6">
+        <input type="text" id="email" name="email" placeholder="Recherche par email" value="{{email_recherche}}" />
+      </div>
+    </div>
+  </div>
+  {% block button %}
+  <div class="form-control">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <button type="submit" value="Filtrer" class="btn btn-outline-info">Filter</button>
+      </div>
+      <div class="col-md-6">
+        <button type="reset" value="reset" class="btn btn-outline-info">Reset</button>
+      </div>
+    </div>
+  </div>
+  {% endblock button %}
+</form>
+{% endblock content %}
+{% block thead %}
+<tr>
+    <th>Id<span class="icon-arrow"></span></th>
+    <th>Nom<span class="icon-arrow"></span></th>
+    <th>Prenom<span class="icon-arrow"></span></th>
+    <th>Email<span class="icon-arrow"></span></th>
+    <th>Telephone<span class="icon-arrow"></span></th>
+    <th>Adresse<span class="icon-arrow"></span></th>
+</tr>
+{% endblock thead %} {% block tbody %} {% for patient in patients %}
+<tr>
+  <td>{{patient.id }}</td>
+  <td>{{ patient.name | upper }}</td>
+  <td>{{ patient.prenom | upper }}</td>
+  <td>{{ patient.email }}</td>
+<!-- Ajoutez cette condition pour vérifier si le numéro de téléphone est None -->
+<!-- Utilisation de la structure de contrôle if pour vérifier si le numéro de téléphone est None -->
+<td>
+    {% if patient.phone is None %}
+        Non communiqué
+    {% else %}
+    {{ patient.phone}}
+    {% endif %}
+</td>
+
+
+
+  <td>{{  patient.addresse | upper }}</td>
+</tr>
+{% endfor %} {% endblock tbody %}
+
+{% block tfooter %}
+<div class="form-control">
+    <div class="row g-3">
+        <div class="col-md-6">
+            <a href="{% url 'export_to_csv' %}?nom={{nom_recherche}}&examen={{examen_recherche}}" download="exported_data.csv">
+                <button type="button" class="btn btn-outline-success"> Export</button>
+            </a>
+        </div>
+        <div class="col-md-6">
+            <a href="{% url 'accueil' %}">
+                <button type="button" class="btn btn-outline-danger"> Home</button>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock tfooter %}
