@@ -62,7 +62,7 @@
 <tr>
   <td>{{consultation.patient_name | upper }}</td>
   <td>{{ consultation.patient_surname | upper }}</td>
-  <td><a href="{% url 'modifier_consultation' consultation.id %}">{{ consultation.patient_email }} </a></td>
+  <td><a href="{% url 'profile_patient' consultation.id %}">{{ consultation.patient_email }} </a></td>
   <td>{{ consultation.examen }}</td>
   <td>{{ consultation.medecin_traitant | upper }}</td>
   <td>{{consultation.resultat}}</td>

@@ -25,7 +25,7 @@ class Patient(models.Model):
     email = models.CharField(max_length=255)
 
     def __str__(self):
-        return f"{self.name}|{self.prenom}|{self.email}"
+        return f"{self.name}|{self.prenom}|{self.email}|{self.phone}|{self.addresse}"
 
 
 ###############################################################################################

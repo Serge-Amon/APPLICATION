@@ -23,7 +23,7 @@ from .views import (search_patient, home,
                     create_patient_and_consultation, list_patients,
                     error, patient_detail, success_patient,
                     list_consultations, export_to_csv,
-                    modifier_consultation)
+                    profile_patient,modifier_info)
 
 
 
@@ -39,7 +39,8 @@ urlpatterns = [
     path('patients/<int:id>/', patient_detail),
     path('consultations/', list_consultations, name='consultations'),
     path('export_to_csv', export_to_csv, name='export_to_csv'),
-    path('consultations/modifier/<int:consultation_id>', modifier_consultation, name="modifier_consultation")
+    path('consultations/<int:consultation_id>', profile_patient, name="profile_patient"),
+    path('consultations/modifier/<int:patient_id>', modifier_info, name='modifier_info'),
     # Ajoutez d'autres URL au besoin
 ]
 
