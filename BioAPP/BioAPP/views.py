@@ -5,13 +5,15 @@ from django.views.generic import CreateView
 from django.views import View
 from .models import Gene, Patient, Consultation  # Assurez-vous que Gene et Exam sont correctement importés
 from .forms import  ExamForm,ConsultationForm,PatientForm, ResultForm
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.template import loader
 from django.db.models import Q
 import csv
 from django.http import HttpResponse
 from django.contrib import messages
+from django.urls import reverse_lazy
+from django.views.generic import DeleteView
 
 class GeneListView(View):
     template_name = '/templates/gene_list.html'
@@ -19,6 +21,24 @@ class GeneListView(View):
     def get(self, request):
         genes = Gene.objects.all()
         return render(request, self.template_name, {'genes': genes})
+
+
+def delete(request, consultation_id):
+    consultation = Consultation.objects.get(id=consultation_id)
+    messages(f"La consultation {consultation_id} du patient {consultation.patient} a été supprimée avec succès.")
+    consultation.delete()
+    return redirect('consultations')
+
+
+class ModelDeleteView(DeleteView):
+    model = Consultation
+    success_url = reverse_lazy('consultations')
+    template_name = f"consultations/confirm_delete.html"
+    
+    def get_object(self, queryset=None):
+        consultation_id = self.kwargs['consultation_id']
+        return self.model.objects.get(pk=consultation_id)
+    
 
 class ExamCreateView(View):
     template_name = '/templates/exam_create.html'
