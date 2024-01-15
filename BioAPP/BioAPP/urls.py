@@ -16,13 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .views import GeneListView, ExamCreateView
+from .views import GeneListView, ExamCreateView, ModelDeleteView
 
 # urls.py
 from .views import (search_patient, home, 
                     create_patient_and_consultation, list_patients,
                     error, patient_detail, success_patient,
-                    list_consultations, export_to_csv)
+                    list_consultations, export_to_csv,
+                    profile_patient,modifier_info, delete)
 
 
 
@@ -38,7 +39,9 @@ urlpatterns = [
     path('patients/<int:id>/', patient_detail),
     path('consultations/', list_consultations, name='consultations'),
     path('export_to_csv', export_to_csv, name='export_to_csv'),
-    
+    path('consultations/<int:consultation_id>', profile_patient, name="profile_patient"),
+    path('consultations/modifier/<int:patient_id>', modifier_info, name='modifier_info'),
+    path('consultations/suppression/<int:consultation_id>', ModelDeleteView.as_view(), name="suppression")
     # Ajoutez d'autres URL au besoin
 ]
 

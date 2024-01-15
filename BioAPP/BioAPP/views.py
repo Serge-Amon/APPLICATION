@@ -4,13 +4,16 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import CreateView
 from django.views import View
 from .models import Gene, Patient, Consultation  # Assurez-vous que Gene et Exam sont correctement importés
-from .forms import  ExamForm,ConsultationForm,PatientForm
-from django.http import HttpResponse, HttpResponseRedirect
+from .forms import  ExamForm,ConsultationForm,PatientForm, ResultForm
+from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.template import loader
 from django.db.models import Q
 import csv
 from django.http import HttpResponse
+from django.contrib import messages
+from django.urls import reverse_lazy
+from django.views.generic import DeleteView
 
 class GeneListView(View):
     template_name = '/templates/gene_list.html'
@@ -18,6 +21,24 @@ class GeneListView(View):
     def get(self, request):
         genes = Gene.objects.all()
         return render(request, self.template_name, {'genes': genes})
+
+
+def delete(request, consultation_id):
+    consultation = Consultation.objects.get(id=consultation_id)
+    messages(f"La consultation {consultation_id} du patient {consultation.patient} a été supprimée avec succès.")
+    consultation.delete()
+    return redirect('consultations')
+
+
+class ModelDeleteView(DeleteView):
+    model = Consultation
+    success_url = reverse_lazy('consultations')
+    template_name = f"consultations/confirm_delete.html"
+    
+    def get_object(self, queryset=None):
+        consultation_id = self.kwargs['consultation_id']
+        return self.model.objects.get(pk=consultation_id)
+    
 
 class ExamCreateView(View):
     template_name = '/templates/exam_create.html'
@@ -118,10 +139,35 @@ def home(request):
 def list_patients(request):
     template_name ='liste_patients.html'
     patients = Patient.objects.all()
-    return render(request,f'listings/{template_name}', {'patients':patients})
+    nom = request.GET.get('nom', '')
+    email = request.GET.get('email', '')
+    patient_s = []
+    if nom:
+        patients_nom = patients.filter(name__icontains=nom)
+        patients = patients_nom 
+    if email:
+        patients_email = patients.filter(email__icontains=email)
+        patients = patients_email
+    
+    for patient in patients:
+        patient_s.append({
+            'id': patient.id,
+            'nom': patient.name,
+            'prenom': patient.prenom,
+            'email': patient.email,
+            'adresse': patient.addresse,
+            'phone': patient.phone
+        })
+    context = {
+        'patients': patients,
+        'nom_recherche': nom,
+        'email_recherche' : email
+    }
+    return render(request,f'patients/{template_name}', context)
 
 
 def list_consultations(request):
+    '''List all consultations records'''
     template_name = 'list_consultations.html'
     consultations = Consultation.objects.all()
     consultation_s = []
@@ -131,12 +177,10 @@ def list_consultations(request):
 
     if nom:
         consultations_nom = consultations.filter(patient__name__icontains=nom)
-        print("Consultations filtrées par nom :", consultations_nom)  # Ajout de cette ligne pour le débogage
         consultations = consultations_nom
 
     if examen:
-        consultations_exam = consultations.filter(examen__icontains=examen)
-        print("Consultations filtrées par examen :", consultations_exam)  # Ajout de cette ligne pour le débogage
+        consultations_exam = consultations.filter(examen__name__icontains=examen)
         consultations = consultations_exam
 
     for consultation in consultations:
@@ -149,7 +193,8 @@ def list_consultations(request):
             'patient_surname': patient_info[1],
             'patient_email': patient_info[2],
             'examen': consultation.examen,
-            'medecin_traitant': consultation.medecin_traitant
+            'medecin_traitant': consultation.medecin_traitant,
+            'resultat': consultation.resultat
         })
 
     context = {
@@ -158,16 +203,11 @@ def list_consultations(request):
         'examen_recherche': examen
     }
 
-    return render(request, f'listings/{template_name}', context)
+    return render(request, f'consultations/{template_name}', context)
 
-
-
-def get_patient_by_id(patient_id):
-    return get_object_or_404(Patient, id=patient_id)
-
-def patient_detail(request, id):
-    patient = get_patient_by_id(id)
-    return render(request, 'listings/detail_record.html', {'patient': patient})
+def patient_detail(request, patient_id):
+    patient = get_object_or_404(Patient, id=patient_id)
+    return render(request, 'consultations/detail_record.html', {'patient': patient})
 
 # def get_latest_patient():
 #     latest_patient = Patient.objects.order_by('-id').first()
@@ -209,6 +249,7 @@ def diagnostic_create(request):
 
 
 def export_to_csv(request):
+    '''Export data to CSV file'''
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="exported_data.csv"'
 
@@ -272,19 +313,114 @@ def filter_consultations(request):
     if examen:
         consultations = consultations.filter(examen__icontains=examen)
     
-    return render(request, f'listings/{template_name}', {'consultations': consultations})
+    return render(request, f'consultations/{template_name}', {'consultations': consultations})
 
-# def list_consultations(request):
-#     template_name = 'list_consultations.html'
-#     consultations = Consultation.objects.all()
+# def modifier_consultation(request, consultation_id):
+#     '''Modify consultation record for a given id'''
+#     consultation = get_object_or_404(Consultation, id=consultation_id)
+#     template_name = 'modifier_consultation.html'
+#     consultation_patient = {
+#         'id':  '',
+#         'name': '',
+#         'prenom': '',
+#         'telephone': '',
+#         'Examen': '',
+#         'Resultat': ''
+#     }
+#     context = {
+#         'consultation': consultation,
+#         'patient': consultation_patient
+#     }
+#     return render(request,f'consultations/{template_name}', context )
 
-#     nom = request.GET.get('nom')
-#     examen = request.GET.get('examen')
 
-#     if nom:
-#         consultations = consultations.filter(patient_name__icontains=nom)
 
-#     if examen:
-#         consultations = consultations.filter(examen__icontains=examen)
+def update_record(View):
+    template_name = 'consultation_patient.html'
+    form_class = ConsultationForm
+    
+    def get(self, request, pk):
+        instance = get_object_or_404(View, pk=pk)
+        form = self.form_class(instance=instance)
+        context = {
+            'form': form,
+            'instance': instance
+        }
+        return render(request, f'consultations/{self.template_name}', context)
+    
+    def post(self, request, pk):
+        instance = get_object_or_404(Consultation, pk=pk)
+        form = self.form_class(request.POST, instance=instance)
+        context = {
+            'form': form,
+            'instance': instance
+        }
+        if form.is_valid():
+            form.save()
+            messages.success("Les informations ont été mise à jour avec succès.")
+            return redirect("consultations")
+        
+        return render(request, f'{self.template_name}', context)
+        
+def profile_patient(request, consultation_id):
+    consultation = get_object_or_404(Consultation, id=consultation_id)
+    template_name = 'consultation_patient.html'
+    
+    patient_info = str(consultation.patient).split('|')
+    formatted_date = consultation.date_consultation.strftime("%A, %d %B %Y")
+    patient = {
+        'id': consultation.id,
+        'date': formatted_date,
+        'name': patient_info[0],
+        'prenom': patient_info[1],
+        'email': patient_info[2],
+        'examen': consultation.examen,
+        'medecin_traitant': consultation.medecin_traitant,
+        'resultat': consultation.resultat,
+        'phone': patient_info[3],
+        'adresse': patient_info[4],
+    }
+    
+    context = {
+        'patient': patient
+    }
+    return render(request,f'consultations/{template_name}', context)
 
-#     return render(request, f'listings/{template_name}', {'consultation_s': consultations})
+def modifier_info(request, patient_id):
+    consultation = get_object_or_404(Consultation, id=patient_id)
+    template_name = 'sauvegarde.html'
+
+    # Assurez-vous d'ajuster cette partie en fonction de votre modèle Patient
+    patient_info = str(consultation.patient).split('|')
+    formatted_date = consultation.date_consultation.strftime("%A, %d %B %Y")
+    patient = {
+        'id': consultation.id,
+        'date': formatted_date,
+        'name': patient_info[0],
+        'prenom': patient_info[1],
+        'email': patient_info[2],
+        'examen': consultation.examen,
+        'medecin_traitant': consultation.medecin_traitant,
+        'resultat': consultation.resultat,
+        'phone': patient_info[3],
+        'adresse': patient_info[4],
+    }
+
+    if request.method == "POST":
+        # Utilisez ConsultationForm avec instance=consultation
+        form = ResultForm(request.POST, instance=consultation)
+        print("Reponse de la requete form : ", form.is_valid())
+        if form.is_valid():
+            consultation.resultat = form.cleaned_data['resultat']
+            consultation.save()
+            return redirect('consultations')
+    else:
+        # Utilisez ConsultationForm avec instance=consultation
+        form = ConsultationForm(instance=consultation)
+
+    context = {
+        'form': form,
+        'patient': patient,  # Ajoutez les informations du patient au contexte
+    }
+
+    return render(request, f'consultations/{template_name}', context)
